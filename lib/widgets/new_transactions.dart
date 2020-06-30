@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTransaction;
@@ -12,6 +13,7 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
   void _submitData() {
     final enteredTitle = _titleController.text;
@@ -35,7 +37,11 @@ class _NewTransactionState extends State<NewTransaction> {
     ).then((pickedDate) {
       if (pickedDate == null) {
         return;
-      } else {}
+      } else {
+        setState(() {
+          _selectedDate = pickedDate;
+        });
+      }
     });
   }
 
@@ -69,7 +75,14 @@ class _NewTransactionState extends State<NewTransaction> {
               height: 70,
               child: Row(
                 children: <Widget>[
-                  Text('No Date Chosen'),
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'No Date Chosen'
+                          : 'Picked Date: ' +
+                              DateFormat.yMd().format(_selectedDate),
+                    ),
+                  ),
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
                     child: Text(
